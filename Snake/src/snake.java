@@ -88,11 +88,20 @@ class Juego {
         else                                   snake.removeLast();
     }
 
+    public void checkGame() {
+        int[] head = snake.peekFirst();
+        int r = head[0], c = head[1];
+
+        if(r >= tamano_t || c >= tamano_t || r < 0 || c < 0 || isSnake(r, c)) gameOver = true;
+    }
+
     public void juego() {
+        dibujarTablero();
         while(!gameOver) {
-            dibujarTablero();
             getDir();
             Mover();
+            dibujarTablero();
+            checkGame();
         }
 
     }
