@@ -43,7 +43,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         snake.add(new int[]{BOARD_SIZE / 2, BOARD_SIZE / 2});
         generateFood();
         gameOver = false;
-        dir = 'R'; // Dirección inicial
+        dir = ' '; // Dirección inicial
         puntos = 0; // Reiniciar puntos
     }
 
@@ -124,7 +124,7 @@ public class SnakeGame extends JPanel implements ActionListener {
             Reglas del Juego:
             1. Usa las teclas W, A, S, D para mover la serpiente.
             2. Come la comida roja para ganar puntos.
-            3. No choques con los bordes ni contigo mismo.
+            3. No choques con los bordes ni con vos mismo.
             4. El juego termina si la serpiente choca.
 
             ¡Buena suerte!
@@ -168,8 +168,8 @@ public class SnakeGame extends JPanel implements ActionListener {
         int velocidad;
         switch (choice) {
             case 0 -> velocidad = 150; // Fácil
-            case 1 -> velocidad = 70; // Media
-            case 2 -> velocidad = 40;  // Difícil
+            case 1 -> velocidad = 100; // Media
+            case 2 -> velocidad = 50;  // Difícil
             default -> { return; } // Cancelado, volver al menú
         }
 
