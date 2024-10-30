@@ -8,12 +8,12 @@ import java.util.Random;
 public class SnakeGame extends JPanel implements ActionListener {
 
 private final int TILE_SIZE = 20;
-private final int BOARD_SIZE = 20;
+private final int BOARD_SIZE = 25;
 private final int SCREEN_SIZE = TILE_SIZE * BOARD_SIZE;
 private final Timer timer;
 private int[] food;
 private LinkedList<int[]> snake = new LinkedList<>();
-private char dir = 'R';
+private char dir;
 private int puntos = 0;
 private boolean gameOver = false;
 
@@ -33,7 +33,7 @@ public SnakeGame() {
         }
     });
     initGame();
-    timer = new Timer(150, this);
+    timer = new Timer(80, this);
     timer.start();
 }
 
