@@ -20,7 +20,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         setPreferredSize(new Dimension(SCREEN_SIZE, SCREEN_SIZE));
         setBackground(Color.BLACK);
         setFocusable(true);
-        addKeyListener(new KeyAdapter() {
+        addKeyListener(new KeyAdapter() { // con esto podemos "escuchar" las teclas que presiona el usuario y asi saber cual va a ser la direccion
             @Override
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
@@ -32,11 +32,11 @@ public class SnakeGame extends JPanel implements ActionListener {
             }
         });
         initGame();
-        timer = new Timer(velocidad, this);
+        timer = new Timer(velocidad, this); // esto define el tiempo en el que se va actualizando la pagina
         timer.start();
     }
 
-    private void initGame() {
+    private void initGame() { // iniciamos la posicion de la serpiente
         snake.clear();
         snake.add(new int[]{BOARD_SIZE / 2, BOARD_SIZE / 2});
         generateFood();
@@ -45,7 +45,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         puntos = 0; // Reiniciar puntos
     }
 
-    private void generateFood() {
+    private void generateFood() { // generamos la posicion de la comida de forma aleatoria
         Random rand = new Random();
         int row, col;
         do {
@@ -55,14 +55,14 @@ public class SnakeGame extends JPanel implements ActionListener {
         food = new int[]{row, col};
     }
 
-    private boolean isSnake(int row, int col) {
+    private boolean isSnake(int row, int col) { // esta funcion es para saber si las cordenadas que le estamos pasando son parte de la serpiente
         for (int[] segment : snake) {
             if (segment[0] == row && segment[1] == col) return true;
         }
         return false;
     }
 
-    private void move() {
+    private void move() { // con esta funcion vamos actualizando el movimiento y la posicion de la cabeza de la serpiente
         int[] head = snake.peekFirst();
         int nRow = head[0];
         int nCol = head[1];
@@ -96,7 +96,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         super.paintComponent(g);
         if (gameOver) {
             g.setColor(Color.RED);
-            g.drawString("Game Over! Puntos: " + puntos, SCREEN_SIZE / 4, SCREEN_SIZE / 2);
+            g.drawString("Game Over! Puntos: " + puntos, SCREEN_SIZE / 2, SCREEN_SIZE / 2);
             return;
         }
 
@@ -148,7 +148,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         }
     }
 
-    private static void chooseDifficulty() {
+    private static void chooseDifficulty() { // seteamos la velocidad en la que se va a ir actualizando la pagina dependiendo de que dificultad haya elegido el usuario
         String[] difficulties = {"Fácil", "Media", "Difícil"};
         int choice = JOptionPane.showOptionDialog(
                 null, 
