@@ -1,5 +1,3 @@
-package snacke;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -26,10 +24,10 @@ public class SnakeGame extends JPanel implements ActionListener {
             @Override
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_W -> { if (dir != 'D') dir = 'U'; }
-                    case KeyEvent.VK_S -> { if (dir != 'U') dir = 'D'; }
-                    case KeyEvent.VK_A -> { if (dir != 'R') dir = 'L'; }
-                    case KeyEvent.VK_D -> { if (dir != 'L') dir = 'R'; }
+                    case KeyEvent.VK_W:  if (dir != 'D') dir = 'U'; break;
+                    case KeyEvent.VK_S:  if (dir != 'U') dir = 'D'; break;
+                    case KeyEvent.VK_A:  if (dir != 'R') dir = 'L'; break;
+                    case KeyEvent.VK_D:  if (dir != 'L') dir = 'R'; break;
                 }
             }
         });
@@ -70,10 +68,10 @@ public class SnakeGame extends JPanel implements ActionListener {
         int nCol = head[1];
 
         switch (dir) {
-            case 'U' -> nRow--;
-            case 'D' -> nRow++;
-            case 'L' -> nCol--;
-            case 'R' -> nCol++;
+            case 'U': nRow--; break;
+            case 'D': nRow++; break;
+            case 'L': nCol--; break;
+            case 'R': nCol++; break;
         }
 
         // Verificar colisiones
@@ -120,15 +118,12 @@ public class SnakeGame extends JPanel implements ActionListener {
     }
 
     private static void showRules() {
-        String reglas = """
-            Reglas del Juego:
-            1. Usa las teclas W, A, S, D para mover la serpiente.
-            2. Come la comida roja para ganar puntos.
-            3. No choques con los bordes ni con vos mismo.
-            4. El juego termina si la serpiente choca.
-
-            ¡Buena suerte!
-        """;
+        String reglas = "Reglas del Juego:\n"
+              + "1. Usa las teclas W, A, S, D para mover la serpiente.\n"
+              + "2. Come la comida roja para ganar puntos.\n"
+              + "3. No choques con los bordes ni con vos mismo.\n"
+              + "4. El juego termina si la serpiente choca.\n\n"
+              + "¡Buena suerte!";
         JOptionPane.showMessageDialog(null, reglas, "Reglas del Juego", JOptionPane.INFORMATION_MESSAGE);
         showMenu(); // Volver al menú principal
     }
@@ -146,10 +141,10 @@ public class SnakeGame extends JPanel implements ActionListener {
                 options[0]);
 
         switch (choice) {
-            case 0 -> chooseDifficulty(); // Elegir dificultad y empezar juego
-            case 1 -> showRules(); // Ver Reglas
-            case 2 -> System.exit(0); // Salir
-            default -> System.exit(0); // Salir en caso de cierre del diálogo
+            case 0: chooseDifficulty(); break; // Elegir dificultad y empezar juego
+            case 1: showRules(); break; // Ver Reglas
+            case 2: System.exit(0); break; // Salir
+            default: System.exit(0); break; // Salir en caso de cierre del diálogo
         }
     }
 
@@ -167,10 +162,10 @@ public class SnakeGame extends JPanel implements ActionListener {
 
         int velocidad;
         switch (choice) {
-            case 0 -> velocidad = 150; // Fácil
-            case 1 -> velocidad = 100; // Media
-            case 2 -> velocidad = 50;  // Difícil
-            default -> { return; } // Cancelado, volver al menú
+            case 0: velocidad = 150; break; // Fácil
+            case 1: velocidad = 100; break; // Media
+            case 2: velocidad = 50;  break; // Difícil
+            default: { return; } // Cancelado, volver al menú
         }
 
         startGame(velocidad);
