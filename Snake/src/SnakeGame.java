@@ -1,3 +1,5 @@
+package snacke;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -20,23 +22,23 @@ public class SnakeGame extends JPanel implements ActionListener {
         setPreferredSize(new Dimension(SCREEN_SIZE, SCREEN_SIZE));
         setBackground(Color.BLACK);
         setFocusable(true);
-        addKeyListener(new KeyAdapter() { // con esto podemos "escuchar" las teclas que presiona el usuario y asi saber cual va a ser la direccion
+        addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_W:  if (dir != 'D') dir = 'U'; break;
-                    case KeyEvent.VK_S:  if (dir != 'U') dir = 'D'; break;
-                    case KeyEvent.VK_A:  if (dir != 'R') dir = 'L'; break;
-                    case KeyEvent.VK_D:  if (dir != 'L') dir = 'R'; break;
+                    case KeyEvent.VK_W -> { if (dir != 'D') dir = 'U'; }
+                    case KeyEvent.VK_S -> { if (dir != 'U') dir = 'D'; }
+                    case KeyEvent.VK_A -> { if (dir != 'R') dir = 'L'; }
+                    case KeyEvent.VK_D -> { if (dir != 'L') dir = 'R'; }
                 }
             }
         });
         initGame();
-        timer = new Timer(velocidad, this); // esto define el tiempo en el que se va actualizando la pagina
+        timer = new Timer(velocidad, this);
         timer.start();
     }
 
-    private void initGame() { // iniciamos la posicion de la serpiente
+    private void initGame() {
         snake.clear();
         snake.add(new int[]{BOARD_SIZE / 2, BOARD_SIZE / 2});
         generateFood();
@@ -45,7 +47,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         puntos = 0; // Reiniciar puntos
     }
 
-    private void generateFood() { // generamos la posicion de la comida de forma aleatoria
+    private void generateFood() {
         Random rand = new Random();
         int row, col;
         do {
@@ -55,23 +57,23 @@ public class SnakeGame extends JPanel implements ActionListener {
         food = new int[]{row, col};
     }
 
-    private boolean isSnake(int row, int col) { // esta funcion es para saber si las cordenadas que le estamos pasando son parte de la serpiente
+    private boolean isSnake(int row, int col) {
         for (int[] segment : snake) {
             if (segment[0] == row && segment[1] == col) return true;
         }
         return false;
     }
 
-    private void move() { // con esta funcion vamos actualizando el movimiento y la posicion de la cabeza de la serpiente
+    private void move() {
         int[] head = snake.peekFirst();
         int nRow = head[0];
         int nCol = head[1];
 
         switch (dir) {
-            case 'U': nRow--; break;
-            case 'D': nRow++; break;
-            case 'L': nCol--; break;
-            case 'R': nCol++; break;
+            case 'U' -> nRow--;
+            case 'D' -> nRow++;
+            case 'L' -> nCol--;
+            case 'R' -> nCol++;
         }
 
         // Verificar colisiones
@@ -96,7 +98,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         super.paintComponent(g);
         if (gameOver) {
             g.setColor(Color.RED);
-            g.drawString("Game Over! Puntos: " + puntos, SCREEN_SIZE / 2, SCREEN_SIZE / 2);
+            g.drawString("Game Over! Puntos: " + puntos, SCREEN_SIZE / 4, SCREEN_SIZE / 2);
             return;
         }
 
@@ -118,12 +120,15 @@ public class SnakeGame extends JPanel implements ActionListener {
     }
 
     private static void showRules() {
-        String reglas = "Reglas del Juego:\n"
-              + "1. Usa las teclas W, A, S, D para mover la serpiente.\n"
-              + "2. Come la comida roja para ganar puntos.\n"
-              + "3. No choques con los bordes ni con vos mismo.\n"
-              + "4. El juego termina si la serpiente choca.\n\n"
-              + "¡Buena suerte!";
+        String reglas = """
+            Reglas del Juego:
+            1. Usa las teclas W, A, S, D para mover la serpiente.
+            2. Come la comida roja para ganar puntos.
+            3. No choques con los bordes ni con vos mismo.
+            4. El juego termina si la serpiente choca.
+
+            ¡Buena suerte!
+        """;
         JOptionPane.showMessageDialog(null, reglas, "Reglas del Juego", JOptionPane.INFORMATION_MESSAGE);
         showMenu(); // Volver al menú principal
     }
@@ -141,14 +146,14 @@ public class SnakeGame extends JPanel implements ActionListener {
                 options[0]);
 
         switch (choice) {
-            case 0: chooseDifficulty(); break; // Elegir dificultad y empezar juego
-            case 1: showRules(); break; // Ver Reglas
-            case 2: System.exit(0); break; // Salir
-            default: System.exit(0); break; // Salir en caso de cierre del diálogo
+            case 0 -> chooseDifficulty(); // Elegir dificultad y empezar juego
+            case 1 -> showRules(); // Ver Reglas
+            case 2 -> System.exit(0); // Salir
+            default -> System.exit(0); // Salir en caso de cierre del diálogo
         }
     }
 
-    private static void chooseDifficulty() { // seteamos la velocidad en la que se va a ir actualizando la pagina dependiendo de que dificultad haya elegido el usuario
+    private static void chooseDifficulty() {
         String[] difficulties = {"Fácil", "Media", "Difícil"};
         int choice = JOptionPane.showOptionDialog(
                 null, 
@@ -162,10 +167,10 @@ public class SnakeGame extends JPanel implements ActionListener {
 
         int velocidad;
         switch (choice) {
-            case 0: velocidad = 150; break; // Fácil
-            case 1: velocidad = 100; break; // Media
-            case 2: velocidad = 50;  break; // Difícil
-            default: { return; } // Cancelado, volver al menú
+            case 0 -> velocidad = 150; // Fácil
+            case 1 -> velocidad = 100; // Media
+            case 2 -> velocidad = 50;  // Difícil
+            default -> { return; } // Cancelado, volver al menú
         }
 
         startGame(velocidad);
