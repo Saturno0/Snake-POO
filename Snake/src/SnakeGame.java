@@ -1,4 +1,4 @@
-package snacke;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +15,6 @@ public class SnakeGame extends JPanel implements ActionListener {
     private Timer timer;
     private int[] food;
     private LinkedList<int[]> snake = new LinkedList<>();
-    private static LinkedList<Integer> desafio = new LinkedList<>();
     private char dir;
     private int puntos = 0;
     private boolean gameOver = false;
@@ -84,6 +83,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         if (nRow < 0 || nCol < 0 || nRow >= BOARD_SIZE || nCol >= BOARD_SIZE || 
             (snake.size() > 1 && isSnake(nRow, nCol))) {
             gameOver = true;
+            puntuar();
             return;
         }
 
@@ -97,28 +97,14 @@ public class SnakeGame extends JPanel implements ActionListener {
     }
 
     private static void iniciateDesafio() {
-        for (int i = 0; i < 7; i++) {
-            Random random = new Random();
-            int r = random.nextInt(300);
-            desafio.addFirst(r);
-        }
+        Random random = new Random();
+        int r = random.nextInt(300);
+        punto_desafio = r;
+        
     }
-
-    private static void Desafio() {
-        String[] dias = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"};
-        String day = LocalDate.now().getDayOfWeek().toString();
-        int pointer = -1;
-
-        for (int i = 0; i < dias.length; i++) {
-            if (dias[i].equals(day)) {
-                pointer = i;
-                break;
-            }
-        }
-
-        if (pointer != -1) {
-            punto_desafio = desafio.get(pointer);
-        }
+    
+    private void puntuar() {
+    	if (puntos >= punto_desafio) puntos += 100;
     }
 
     @Override
@@ -169,7 +155,6 @@ public class SnakeGame extends JPanel implements ActionListener {
         
         if (!desafioInicializado) {
             iniciateDesafio();
-            Desafio();
             desafioInicializado = true;
         }
         
