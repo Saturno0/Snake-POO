@@ -1,11 +1,8 @@
-
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.Random;
+import javax.swing.*;
 
 public class SnakeGame extends JPanel implements ActionListener {
 
@@ -20,6 +17,16 @@ public class SnakeGame extends JPanel implements ActionListener {
     private boolean gameOver = false;
     private static int punto_desafio;
     private static boolean desafioInicializado = false;
+    private Image cuerpo, cola, cabeza;
+    private Image turnLeftUp, turnLeftDown, turnRightUp, turnRightDown;
+
+    cuerpo = new ImageIcon("/img/Cuerpo.png").getImage();
+    cabeza = new ImageIcon("/img/Cabeza.png").getImage();
+    cola = new ImageIcon("/img/Cola.png").getImage();
+    turnLeftUp = new ImageIcon("/img/Cuerpo_izquierda_A.png").getImage();
+    turnLeftDown = new ImageIcon("/img/Cuerpo_izquierda_D.png").getImage();
+    turnRightUp = new ImageIcon("/img/Cuerpo_izquierda.png").getImage();
+    turnRightDown = new ImageIcon("/img/Cuerpo_derecha.png").getImage();
 
     public SnakeGame(int velocidad) {
         setPreferredSize(new Dimension(SCREEN_SIZE, SCREEN_SIZE));
