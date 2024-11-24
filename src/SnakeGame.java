@@ -21,8 +21,10 @@ public class SnakeGame extends JPanel implements ActionListener {
     private Image tailUp, tailDown, tailLeft, tailRight;
     private Image bodyStraightHorizontal, bodyStraightVertical;
     private Image turnLeftUp, turnLeftDown, turnRightUp, turnRightDown;
+    private Image apple;
 
     private void loadImages() {
+        apple = new ImageIcon(getClass().getResource("/img/manzana.png")).getImage();
         headUp = new ImageIcon(getClass().getResource("/img/Cabeza_arr.png")).getImage();
         headDown = new ImageIcon(getClass().getResource("/img/Cabeza_abj.png")).getImage();
         headLeft = new ImageIcon(getClass().getResource("/img/Cabeza_izq.png")).getImage();
@@ -149,8 +151,8 @@ public class SnakeGame extends JPanel implements ActionListener {
             return;
         }
 
-        g.setColor(Color.RED);
-        g.fillRect(food[1] * TILE_SIZE, food[0] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        g.drawImage(apple, food[1] * TILE_SIZE, food[0] * TILE_SIZE, TILE_SIZE, TILE_SIZE, this);
+
 
         for (int i = 0; i < snake.size(); i++) {
             int[] segment = snake.get(i);
