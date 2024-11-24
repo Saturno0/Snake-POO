@@ -17,21 +17,40 @@ public class SnakeGame extends JPanel implements ActionListener {
     private boolean gameOver = false;
     private static int punto_desafio;
     private static boolean desafioInicializado = false;
-    private Image cuerpo, cola, cabeza;
+    private Image headUp, headDown, headLeft, headRight;
+    private Image tailUp, tailDown, tailLeft, tailRight;
+    private Image bodyStraightHorizontal, bodyStraightVertical;
     private Image turnLeftUp, turnLeftDown, turnRightUp, turnRightDown;
 
-    cuerpo = new ImageIcon("/img/Cuerpo.png").getImage();
-    cabeza = new ImageIcon("/img/Cabeza.png").getImage();
-    cola = new ImageIcon("/img/Cola.png").getImage();
-    turnLeftUp = new ImageIcon("/img/Cuerpo_izquierda_A.png").getImage();
-    turnLeftDown = new ImageIcon("/img/Cuerpo_izquierda_D.png").getImage();
-    turnRightUp = new ImageIcon("/img/Cuerpo_izquierda.png").getImage();
-    turnRightDown = new ImageIcon("/img/Cuerpo_derecha.png").getImage();
+    private void loadImages() {
+        headUp = new ImageIcon(getClass().getResource("/img/Cabeza_arr.png")).getImage();
+        headDown = new ImageIcon(getClass().getResource("/img/Cabeza_abj.png")).getImage();
+        headLeft = new ImageIcon(getClass().getResource("/img/Cabeza_izq.png")).getImage();
+        headRight = new ImageIcon(getClass().getResource("/img/Cabeza_der.png")).getImage();
+    
+        tailUp = new ImageIcon(getClass().getResource("/img/Cola_arr.png")).getImage();
+        tailDown = new ImageIcon(getClass().getResource("/img/Cola_abj.png")).getImage();
+        tailLeft = new ImageIcon(getClass().getResource("/img/Cola_izq.png")).getImage();
+        tailRight = new ImageIcon(getClass().getResource("/img/Cola_der.png")).getImage();
+    
+        bodyStraightHorizontal = new ImageIcon(getClass().getResource("/img/Cuerpo_izq-der.png")).getImage();
+        bodyStraightVertical = new ImageIcon(getClass().getResource("/img/Cuerpo_arr-abj.png")).getImage();
+    
+        turnLeftUp = new ImageIcon(getClass().getResource("/img/Doblez_der_abj.png")).getImage();
+        turnLeftDown = new ImageIcon(getClass().getResource("/img/Doblez_arr_der.png")).getImage();
+        turnRightUp = new ImageIcon(getClass().getResource("/img/Doblez_izq_abj.png")).getImage();
+        turnRightDown = new ImageIcon(getClass().getResource("/img/Doblez_arr_izq.png")).getImage();
+
+    }
+    
+    
+
 
     public SnakeGame(int velocidad) {
         setPreferredSize(new Dimension(SCREEN_SIZE, SCREEN_SIZE));
         setBackground(Color.BLACK);
         setFocusable(true);
+        loadImages(); // Cargar imágenes aquí
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -43,7 +62,7 @@ public class SnakeGame extends JPanel implements ActionListener {
                 }
             }
         });
-
+    
         initGame();
         timer = new Timer(velocidad, this);
         timer.start();
@@ -111,8 +130,15 @@ public class SnakeGame extends JPanel implements ActionListener {
     }
     
     private void puntuar() {
-    	if (puntos >= punto_desafio) puntos += 100;
+        if (!desafioInicializado) {
+            iniciateDesafio();
+            desafioInicializado = true;
+        }
+        if (puntos >= punto_desafio) {
+            puntos += 100;
+        }
     }
+    
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -126,9 +152,55 @@ public class SnakeGame extends JPanel implements ActionListener {
         g.setColor(Color.RED);
         g.fillRect(food[1] * TILE_SIZE, food[0] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 
-        g.setColor(Color.GREEN);
-        for (int[] segment : snake) {
-            g.fillRect(segment[1] * TILE_SIZE, segment[0] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        for (int i = 0; i < snake.size(); i++) {
+            int[] segment = snake.get(i);
+            int x = segment[1] * TILE_SIZE;
+            int y = segment[0] * TILE_SIZE;
+        
+            if (i == 0) {
+                // Cabeza
+                switch (dir) {
+                    case 'U': g.drawImage(headUp, x, y, TILE_SIZE, TILE_SIZE, this); break;
+                    case 'D': g.drawImage(headDown, x, y, TILE_SIZE, TILE_SIZE, this); break;
+                    case 'L': g.drawImage(headLeft, x, y, TILE_SIZE, TILE_SIZE, this); break;
+                    case 'R': g.drawImage(headRight, x, y, TILE_SIZE, TILE_SIZE, this); break;
+                }
+            } else if (i == snake.size() - 1) {
+                // Cola
+                int[] prev = snake.get(i - 1);
+                if (prev[0] < segment[0]) {
+                    g.drawImage(tailUp, x, y, TILE_SIZE, TILE_SIZE, this);
+                } else if (prev[0] > segment[0]) {
+                    g.drawImage(tailDown, x, y, TILE_SIZE, TILE_SIZE, this);
+                } else if (prev[1] < segment[1]) {
+                    g.drawImage(tailLeft, x, y, TILE_SIZE, TILE_SIZE, this);
+                } else if (prev[1] > segment[1]) {
+                    g.drawImage(tailRight, x, y, TILE_SIZE, TILE_SIZE, this);
+                }
+            } else {
+                // Cuerpo
+                int[] prev = snake.get(i - 1);
+                int[] next = snake.get(i + 1);
+        
+                if (prev[0] == next[0]) {
+                    // Horizontal
+                    g.drawImage(bodyStraightHorizontal, x, y, TILE_SIZE, TILE_SIZE, this);
+                } else if (prev[1] == next[1]) {
+                    // Vertical
+                    g.drawImage(bodyStraightVertical, x, y, TILE_SIZE, TILE_SIZE, this);
+                } else {
+                    // Dobleces
+                    if (prev[0] < segment[0] && next[1] > segment[1] || next[0] < segment[0] && prev[1] > segment[1]) {
+                        g.drawImage(turnLeftDown, x, y, TILE_SIZE, TILE_SIZE, this);
+                    } else if (prev[0] > segment[0] && next[1] > segment[1] || next[0] > segment[0] && prev[1] > segment[1]) {
+                        g.drawImage(turnLeftUp, x, y, TILE_SIZE, TILE_SIZE, this);
+                    } else if (prev[0] < segment[0] && next[1] < segment[1] || next[0] < segment[0] && prev[1] < segment[1]) {
+                        g.drawImage(turnRightDown, x, y, TILE_SIZE, TILE_SIZE, this);
+                    } else if (prev[0] > segment[0] && next[1] < segment[1] || next[0] > segment[0] && prev[1] < segment[1]) {
+                        g.drawImage(turnRightUp, x, y, TILE_SIZE, TILE_SIZE, this);
+                    }
+                }
+            }
         }
     }
 
