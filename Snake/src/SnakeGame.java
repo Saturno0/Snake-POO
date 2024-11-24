@@ -1,6 +1,9 @@
+
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -15,6 +18,8 @@ public class SnakeGame extends JPanel implements ActionListener {
     private char dir;
     private int puntos = 0;
     private boolean gameOver = false;
+    private static int punto_desafio;
+    private static boolean desafioInicializado = false;
 
     public SnakeGame(int velocidad) {
         setPreferredSize(new Dimension(SCREEN_SIZE, SCREEN_SIZE));
@@ -24,13 +29,14 @@ public class SnakeGame extends JPanel implements ActionListener {
             @Override
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_W -> { if (dir != 'D') dir = 'U'; }
-                    case KeyEvent.VK_S -> { if (dir != 'U') dir = 'D'; }
-                    case KeyEvent.VK_A -> { if (dir != 'R') dir = 'L'; }
-                    case KeyEvent.VK_D -> { if (dir != 'L') dir = 'R'; }
+                    case KeyEvent.VK_W: if (dir != 'D') dir = 'U'; break;
+                    case KeyEvent.VK_S: if (dir != 'U') dir = 'D'; break;
+                    case KeyEvent.VK_A: if (dir != 'R') dir = 'L'; break;
+                    case KeyEvent.VK_D: if (dir != 'L') dir = 'R'; break;
                 }
             }
         });
+
         initGame();
         timer = new Timer(velocidad, this);
         timer.start();
@@ -41,8 +47,8 @@ public class SnakeGame extends JPanel implements ActionListener {
         snake.add(new int[]{BOARD_SIZE / 2, BOARD_SIZE / 2});
         generateFood();
         gameOver = false;
-        dir = ' '; // Dirección inicial
-        puntos = 0; // Reiniciar puntos
+        dir = ' ';
+        puntos = 0;
     }
 
     private void generateFood() {
@@ -68,20 +74,19 @@ public class SnakeGame extends JPanel implements ActionListener {
         int nCol = head[1];
 
         switch (dir) {
-            case 'U' -> nRow--;
-            case 'D' -> nRow++;
-            case 'L' -> nCol--;
-            case 'R' -> nCol++;
+            case 'U': nRow--; break;
+            case 'D': nRow++; break;
+            case 'L': nCol--; break;
+            case 'R': nCol++; break;
         }
 
-        // Verificar colisiones
         if (nRow < 0 || nCol < 0 || nRow >= BOARD_SIZE || nCol >= BOARD_SIZE || 
             (snake.size() > 1 && isSnake(nRow, nCol))) {
             gameOver = true;
+            puntuar();
             return;
         }
 
-        // Comer comida
         snake.addFirst(new int[]{nRow, nCol});
         if (nRow == food[0] && nCol == food[1]) {
             generateFood();
@@ -89,6 +94,17 @@ public class SnakeGame extends JPanel implements ActionListener {
         } else {
             snake.removeLast();
         }
+    }
+
+    private static void iniciateDesafio() {
+        Random random = new Random();
+        int r = random.nextInt(300);
+        punto_desafio = r;
+        
+    }
+    
+    private void puntuar() {
+    	if (puntos >= punto_desafio) puntos += 100;
     }
 
     @Override
@@ -118,21 +134,30 @@ public class SnakeGame extends JPanel implements ActionListener {
     }
 
     private static void showRules() {
-        String reglas = """
-            Reglas del Juego:
-            1. Usa las teclas W, A, S, D para mover la serpiente.
-            2. Come la comida roja para ganar puntos.
-            3. No choques con los bordes ni con vos mismo.
-            4. El juego termina si la serpiente choca.
-
-            ¡Buena suerte!
-        """;
+        String reglas = "Reglas del Juego: \n"
+                + "1. Usa las teclas W, A, S, D para mover la serpiente.\n" 
+                + "2. Come la comida roja para ganar puntos.\n" 
+                + "3. No choques con los bordes ni con vos mismo.\n" 
+                + "4. El juego termina si la serpiente choca.\n\n" 
+                + "¡Buena suerte!\n"; 
         JOptionPane.showMessageDialog(null, reglas, "Reglas del Juego", JOptionPane.INFORMATION_MESSAGE);
-        showMenu(); // Volver al menú principal
+        showMenu(); 
+    }
+
+    private static void showChallenge() {
+        String mensaje = "El desafío de hoy es obtener: " + punto_desafio + " puntos.";
+        JOptionPane.showMessageDialog(null, mensaje, "Desafío del Día", JOptionPane.INFORMATION_MESSAGE);
+        showMenu(); 
     }
 
     private static void showMenu() {
-        String[] options = {"Jugar", "Ver Reglas", "Salir"};
+        String[] options = {"Jugar", "Ver Reglas", "Ver Desafío de Hoy", "Salir"};
+        
+        if (!desafioInicializado) {
+            iniciateDesafio();
+            desafioInicializado = true;
+        }
+        
         int choice = JOptionPane.showOptionDialog(
                 null, 
                 "Bienvenido a Snake Game", 
@@ -144,10 +169,11 @@ public class SnakeGame extends JPanel implements ActionListener {
                 options[0]);
 
         switch (choice) {
-            case 0 -> chooseDifficulty(); // Elegir dificultad y empezar juego
-            case 1 -> showRules(); // Ver Reglas
-            case 2 -> System.exit(0); // Salir
-            default -> System.exit(0); // Salir en caso de cierre del diálogo
+            case 0: chooseDifficulty(); break;
+            case 1: showRules(); break;
+            case 2: showChallenge(); break;
+            case 3: System.exit(0); break;
+            default: System.exit(0);
         }
     }
 
@@ -165,10 +191,10 @@ public class SnakeGame extends JPanel implements ActionListener {
 
         int velocidad;
         switch (choice) {
-            case 0 -> velocidad = 150; // Fácil
-            case 1 -> velocidad = 100; // Media
-            case 2 -> velocidad = 50;  // Difícil
-            default -> { return; } // Cancelado, volver al menú
+            case 0: velocidad = 150; break;
+            case 1: velocidad = 100; break;
+            case 2: velocidad = 50; break;
+            default: return;
         }
 
         startGame(velocidad);
