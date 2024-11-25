@@ -145,6 +145,16 @@ public class SnakeGame extends JPanel implements ActionListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        // Dibujar la cuadrícula
+        g.setColor(Color.DARK_GRAY); // Color del borde
+        for (int i = 0; i <= SCREEN_SIZE; i += TILE_SIZE) {
+            // Líneas verticales
+            g.drawLine(i, 0, i, SCREEN_SIZE);
+            // Líneas horizontales
+            g.drawLine(0, i, SCREEN_SIZE, i);
+        }
+
         if (gameOver) {
             g.setColor(Color.RED);
             g.drawString("Game Over! Puntos: " + puntos, SCREEN_SIZE / 4, SCREEN_SIZE / 2);
@@ -166,6 +176,7 @@ public class SnakeGame extends JPanel implements ActionListener {
                     case 'D': g.drawImage(headDown, x, y, TILE_SIZE, TILE_SIZE, this); break;
                     case 'L': g.drawImage(headLeft, x, y, TILE_SIZE, TILE_SIZE, this); break;
                     case 'R': g.drawImage(headRight, x, y, TILE_SIZE, TILE_SIZE, this); break;
+                    default: g.drawImage(headUp, x, y, TILE_SIZE, TILE_SIZE, this); break; // Dirección por defecto
                 }
             } else if (i == snake.size() - 1) {
                 // Cola
